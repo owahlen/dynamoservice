@@ -1,0 +1,16 @@
+services:
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
+    networks:
+      - dynamoservice
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ./dynamodb:/home/dynamodblocal/data
+
+networks:
+  dynamoservice:
+    name: "dynamoservice"
