@@ -15,28 +15,31 @@ import org.springframework.context.annotation.Profile
 @Configuration
 @EnableDynamoDBRepositories(basePackages = ["com.wahlen.dynamoservice.persistence.repository"])
 class DynamoDBConfiguration(
-    @Value("\${amazon.dynamodb.endpoint}")
-    private val amazonDynamoDBEndpoint: String,
+    @Value("\${aws.accesskey}")
+    private val awsAccessKey: String,
 
-    @Value("\${amazon.aws.accesskey}")
-    private val amazonAWSAccessKey: String,
+    @Value("\${aws.dynamodb.endpoint}")
+    private val awsDynamoDBEndpoint: String,
 
-    @Value("\${amazon.aws.secretkey}")
-    private val amazonAWSSecretKey: String
+    @Value("\${aws.region}")
+    private val awsRegion: String,
+
+    @Value("\${aws.secretkey}")
+    private val awsSecretKey: String
 ) {
 
 
     @Bean
-    @Profile("development", "production")
+    @Profile("!test")
     fun amazonDynamoDB(): AmazonDynamoDB = AmazonDynamoDBClientBuilder
         .standard()
         .withCredentials(AWSStaticCredentialsProvider(amazonAWSCredentials()))
-        .withEndpointConfiguration(EndpointConfiguration(amazonDynamoDBEndpoint, null))
+        .withEndpointConfiguration(EndpointConfiguration(awsDynamoDBEndpoint, awsRegion))
         .build()
 
     @Bean
-    @Profile("development", "production")
+    @Profile("!test")
     fun amazonAWSCredentials(): AWSCredentials =
-        BasicAWSCredentials(amazonAWSAccessKey, amazonAWSSecretKey)
+        BasicAWSCredentials(awsAccessKey, awsSecretKey)
 
 }

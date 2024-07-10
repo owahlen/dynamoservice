@@ -11,19 +11,20 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class DynamoDBTestConfiguration {
-    private val amazonAWSAccessKey = "TestAccessKey"
-    private val amazonAWSSecretKey = "TestSecretKey"
-    private val amazonDynamoDBEndpoint = "http://localhost:8000/"
+    private val awsAccessKey = "TestAccessKey"
+    private val awsDynamoDBEndpoint = "http://localhost:8000/"
+    private val awsRegion = null
+    private val awsSecretKey = "TestSecretKey"
 
     @Bean
     fun amazonDynamoDB(): AmazonDynamoDB = AmazonDynamoDBClientBuilder
         .standard()
         .withCredentials(AWSStaticCredentialsProvider(amazonAWSCredentials()))
-        .withEndpointConfiguration(EndpointConfiguration(amazonDynamoDBEndpoint, null))
+        .withEndpointConfiguration(EndpointConfiguration(awsDynamoDBEndpoint, awsRegion))
         .build()
 
     @Bean
     fun amazonAWSCredentials(): AWSCredentials =
-        BasicAWSCredentials(amazonAWSAccessKey, amazonAWSSecretKey)
+        BasicAWSCredentials(awsAccessKey, awsSecretKey)
 
 }

@@ -1,11 +1,11 @@
 spring.application.name: dynamoservice
 
-amazon:
-  aws:
-    accesskey: DUMMYIDEXAMPLE
-    secretkey: DUMMYEXAMPLEKEY
+aws:
+  accesskey: DUMMYIDEXAMPLE
   dynamodb:
     endpoint: http://localhost:8000/
+  region: ""
+  secretkey: DUMMYEXAMPLEKEY
 
 spring:
   profiles:
