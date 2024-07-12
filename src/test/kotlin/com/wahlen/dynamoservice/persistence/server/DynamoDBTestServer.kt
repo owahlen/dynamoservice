@@ -11,20 +11,33 @@ import org.springframework.stereotype.Component
 @Component
 class DynamoDBTestServer {
 
-    lateinit var dynamoDBProxyServer: DynamoDBProxyServer
-
     @PostConstruct
+    @Synchronized
     fun init() {
-        System.setProperty("sqlite4java.library.path", "native-libs")
-        val port = "8000"
-        val server = ServerRunner.createServerFromCommandLineArgs(arrayOf("-inMemory", "-port", port))
-        server.start()
-        dynamoDBProxyServer = server
+        if (referenceCount == 0) {
+            System.setProperty("sqlite4java.library.path", "native-libs")
+            val port = "8000"
+            val server = ServerRunner.createServerFromCommandLineArgs(arrayOf("-inMemory", "-port", port))
+            server.start()
+            dynamoDBProxyServer = server
+        }
+        referenceCount += 1
     }
 
     @PreDestroy
+    @Synchronized
     fun destroy() {
-        dynamoDBProxyServer.stop()
+        val server = dynamoDBProxyServer
+        if (referenceCount == 1 && server != null) {
+            server.stop()
+            dynamoDBProxyServer = null
+        }
+        referenceCount -= 1
+    }
+
+    companion object {
+        private var referenceCount = 0
+        var dynamoDBProxyServer: DynamoDBProxyServer? = null
     }
 
 }
