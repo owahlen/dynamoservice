@@ -5,12 +5,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
 import com.amazonaws.services.dynamodbv2.model.ResourceInUseException
 import com.wahlen.dynamoservice.persistence.model.ProductInfo
+import com.wahlen.dynamoservice.persistence.repository.ProductInfoRepository
 import org.springframework.stereotype.Service
 
 @Service
 class DynamoDBInitializationService(
     private val amazonDynamoDB: AmazonDynamoDB,
-    private val dynamoDBMapper: DynamoDBMapper
+    private val dynamoDBMapper: DynamoDBMapper,
+    private val productInfoRepository: ProductInfoRepository
 ) {
 
     fun initializeProduction() {
@@ -18,6 +20,11 @@ class DynamoDBInitializationService(
     }
 
     fun initializeDevelopment() {
+        val nProducts = productInfoRepository.count()
+        if (nProducts == 0L) {
+            val productInfo = ProductInfo("20", "50")
+            productInfoRepository.save(productInfo)
+        }
     }
 
     private fun createProductInfos() {

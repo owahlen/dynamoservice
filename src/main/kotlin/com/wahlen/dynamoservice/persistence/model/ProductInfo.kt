@@ -23,4 +23,26 @@ class ProductInfo {
         this.msrp = msrp
         this.cost = cost
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ProductInfo
+
+        if (id != other.id) return false
+        if (msrp != other.msrp) return false
+        if (cost != other.cost) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + (msrp?.hashCode() ?: 0)
+        result = 31 * result + (cost?.hashCode() ?: 0)
+        return result
+    }
+
+
 }
