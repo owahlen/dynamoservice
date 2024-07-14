@@ -68,11 +68,11 @@ class ProductInfoControllerIntegrationTest(
     @Test
     fun `test 'create' returns 200`() {
         // setup
-        val productInfoCreateDTO = ProductInfo("80","90")
+        val productInfoCreateDTO = ProductInfo.create("test product 2", "80", "90")
 
         // when
-        lateinit var productInfoResponseDTO : ProductInfo
-        mockMvc.post("/product"){
+        lateinit var productInfoResponseDTO: ProductInfo
+        mockMvc.post("/product") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(productInfoCreateDTO)
         }
@@ -99,10 +99,10 @@ class ProductInfoControllerIntegrationTest(
     fun `test 'update' returns 200`() {
         // setup
         val productInfo = productInfoRepository.findAll().first()
-        val productInfoUpdateDTO = ProductInfo("10","20")
+        val productInfoUpdateDTO = ProductInfo.create("test product 3", "10", "20")
 
         // when
-        mockMvc.put("/product/${productInfo.id}"){
+        mockMvc.put("/product/${productInfo.id}") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(productInfoUpdateDTO)
         }

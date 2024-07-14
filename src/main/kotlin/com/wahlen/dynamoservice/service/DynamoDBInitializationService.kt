@@ -22,7 +22,7 @@ class DynamoDBInitializationService(
     fun initializeDevelopment() {
         val nProducts = productInfoRepository.count()
         if (nProducts == 0L) {
-            val productInfo = ProductInfo("20", "50")
+            val productInfo = ProductInfo.create("test product1", "20", "50")
             productInfoRepository.save(productInfo)
         }
     }
@@ -35,6 +35,9 @@ class DynamoDBInitializationService(
         try {
             val createTableRequest = dynamoDBMapper.generateCreateTableRequest(clazz)
             createTableRequest.provisionedThroughput = ProvisionedThroughput(1L, 1L)
+            createTableRequest.globalSecondaryIndexes.forEach {
+                it.provisionedThroughput = ProvisionedThroughput(1L, 1L)
+            }
             amazonDynamoDB.createTable(createTableRequest)
         } catch (e: ResourceInUseException) {
             // Ignore this exception that indicates that the table already exists

@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.time.LocalDateTime.now
 
 @SpringBootTest
 class ProductInfoRepositoryIntegrationTests(
@@ -14,9 +15,11 @@ class ProductInfoRepositoryIntegrationTests(
     @Test
     fun `create and load a ProductInfo entity`() {
         // setup
-        val expectedCost = "30"
+        val testStart = now()
+        val expectedName = "foo"
         val expectedPrice = "60"
-        val productInfo = ProductInfo(expectedCost, expectedPrice)
+        val expectedCost = "30"
+        val productInfo = ProductInfo.create(expectedName, expectedPrice, expectedCost)
 
         // when
         productInfoRepository.save(productInfo)
@@ -24,8 +27,11 @@ class ProductInfoRepositoryIntegrationTests(
         // then
         val productInfos = productInfoRepository.findAll().toList()
         assertThat(productInfos.size).isGreaterThanOrEqualTo(1)
-        val containsExpectedProduct = productInfos.any { it.cost == expectedCost && it.msrp == expectedPrice }
-        assertThat(containsExpectedProduct).isTrue()
+        val foundProduct = productInfos.find {
+            it.name == expectedName && it.msrp == expectedPrice && it.cost == expectedCost
+        }
+        assertThat(foundProduct).isNotNull
+        assertThat(foundProduct!!.createdAt).isAfterOrEqualTo(testStart)
     }
 
 }
