@@ -24,7 +24,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.data:spring-data-commons")
 	implementation("com.amazonaws:aws-java-sdk-dynamodb:1.12.759")
-	implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
+	implementation("io.github.boostchicken:spring-data-dynamodb:5.2.5")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
